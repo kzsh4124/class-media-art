@@ -1,6 +1,6 @@
 #Flaskとrender_template（HTMLを表示させるための関数）をインポート
 from flask import Flask,render_template, request, jsonify
-
+import pyaudio
 #Flaskオブジェクトの生成
 app = Flask(__name__)
 
