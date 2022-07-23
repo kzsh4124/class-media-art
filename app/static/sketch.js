@@ -1,35 +1,20 @@
-let count = 0;
+let theShader;
+let path_dir = "../static/";
+function preload(){
+    theShader = loadShader(path_dir+"shader.vert", path_dir+"shader.frag");
+}
 function setup() {
-    createCanvas(100, 100);
-    count = 0;
+    createCanvas(windowWidth, windowHeight, WEBGL);
+    noStroke();
 }
 function draw() {
-    background(220);
-    textSize(60);
-    textAlign(CENTER);
-    text(count, 50, 70);
+    shader(theShader);
+    theShader.setUniform("u_resolution", [width, height]);
+    theShader.setUniform("u_time", millis() / 1000.0);
+    theShader.setUniform("u_mouse", [mouseX, map(mouseY, 0, height, height, 0)]);
+    rect(0, 0, width, height);
+    
 }
-/*
-function keyPressed() {
-    count++
-}
-*/
-
-function keyPressed(){
-    var post = $.ajax({
-        type: "POST",
-        url: "/increment",
-        data: {count: count}, // post a json data.
-        async: false,
-        dataType: "json",
-        success: function(response) {
-            console.log(response);
-            // Receive incremented number.
-            count = response.count;
-        }, 
-        error: function(error) {
-            console.log("Error occurred in keyPressed().");
-            console.log(error);
-        }
-    })
+function windowResized(){
+    resizeCanvas(windowWidth, windowHeight);
 }
