@@ -5,8 +5,13 @@ precision mediump float;
 
 // ピクセルの位置を取得し、シェーダーをシェイプに正しくマッピングするために必ず含める
 attribute vec3 aPosition;
+attribute vec2 aTexCoord;
+
+varying vec2 vTexCoord;
 
 void main() {
+    vTexCoord = aTexCoord;
+
     // w成分として1.0を追加して、位置データをvec4にコピーする
     vec4 positionVec4 = vec4(aPosition, 1.0);
 
