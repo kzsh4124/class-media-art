@@ -2,7 +2,6 @@
 precision mediump float;
 #endif
 
-#extension GL_OES_standard_derivatives : enable
 
 uniform float time;
 uniform vec2 mouse;
@@ -15,11 +14,11 @@ vec2 tex(vec2 uv)
 }
 
 void main( void ) {
-
-    vec2 pos = ( gl_FragCoord.xy - resolution.xy / 2.0) / resolution.y - mouse + 0.5;
+    vec2 mouse_n = mouse / resolution;
     vec2 uv =  ( gl_FragCoord.xy / resolution.xy );
     vec2 prev = tex(uv);
     vec2 pixel = 1./resolution;
+    float dist = length(uv-mouse_n);
 
     // ラプラシアンフィルタで加速度を計算
     float accel =
@@ -37,10 +36,11 @@ void main( void ) {
 
     // 高さを更新
     float height = prev.x + velocity;
-
+    
     // マウス位置に波紋を出す
-    height += max(0.0, 1.0 - length(pos) * 30.0);
-
-    gl_FragColor = vec4(height + 0.5, velocity + 0.5, 0, 1);
+    height = max(0.0, 1.0 - dist * 30.0);
+    gl_FragColor = vec4(height+0.5,velocity+0.5,0.0, 1.0);
+    //vec3 samp = texture2D(backbuffer, uv).xyz*0.98;
+    //gl_FragColor = vec4(uv.x*rad,uv.y*rad,0.0, 1.0) + vec4(samp, 1.0) ;
 
 }
