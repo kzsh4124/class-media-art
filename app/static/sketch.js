@@ -23,7 +23,7 @@ function draw() {
     theShader.setUniform("backbuffer", backbuffer);
     theShader.setUniform("resolution", [width, height]);
     theShader.setUniform("time", millis() / 1000.0);
-    theShader.setUniform("mouse", [mouseX, map(mouseY, 0, height, height, 0)]);
+    theShader.setUniform("mouse", [mouseX/width,map(mouseY, 0, height, 1, 0)]);
     theShader.setUniform("pixel_density", [pixelDensity()]);
     console.log(backbuffer);
     rect(0, 0, width, height);
