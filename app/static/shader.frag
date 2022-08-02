@@ -5,7 +5,7 @@ uniform int frog;
 uniform float frog_time;
 uniform vec4 wave_start;
 uniform vec4 wave_inten;
-
+#define PI 3.14159265
 
 float rand(float x){
     return fract(sin(x)*43758.5453123);
@@ -26,10 +26,10 @@ vec2 ripple_uv(vec2 uv, float time, vec2 center){
     return st;
 }
 // colorは時間と距離に反比例して減衰する
-vec3 wave(vec2 p, vec2 center, vec3 color, time){
+vec3 wave(vec2 p, vec2 center, vec3 color, float time){
 	float dist = length(p - center);
     float constant;
-    if(dist < 0.5*u_time){
+    if(dist < 0.5*time){
         constant=0.; 
     }else{
         constant = 1.;
@@ -38,17 +38,19 @@ vec3 wave(vec2 p, vec2 center, vec3 color, time){
 }
 
 void main(){
-    uv = 2.*gl_FragCoord.xy/u_resolution.xy - 1.;
+    vec2 uv = 2.*gl_FragCoord.xy/min(u_resolution.x, u_resolution.y); - 1.;
     //歪みの適用
     if (frog == 1){
-        time = u_time - frog_time;
+        float time = u_time - frog_time;
         uv = ripple_uv(uv, time, vec2(0,0));
     }
-    color = vec3(0.);
+    //波を生成
+    vec3 color = vec3(0.);
     for(int i = 0; i<4; i++){
         if (wave_start[i] != 0.){
-            center = vec2(noise(wave_start[i]), noise(wave_start[i]+1.));
-            color += wave(uv, center, vec3(0.4,0.4,0.7));
+            vec2 center = vec2(noise(wave_start[i]), noise(wave_start[i]+1.));
+            float time_delta = u_time - wave_start[i];
+            color += wave(uv, center, vec3(0.4,0.4,0.7), time_delta);
         }
     }
     gl_FragColor = vec4(color, 1.);

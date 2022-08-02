@@ -1,5 +1,5 @@
 let theShader;
-let path_dir = "../static";
+let path_dir = "../static/";
 let backbuffer;
 let canvas;
 let frog_param = 0;
@@ -23,7 +23,7 @@ function setup() {
     noStroke();
     mic = new p5.AudioIn();
     mic.start();
-    threshold = 0.5;
+    threshold = 0.;
 
 }
 function draw() {
@@ -44,7 +44,7 @@ function draw() {
     //定例的な波を生成
     if ((frameCount+1) % 60 == 0){
         for(let i=0;i<4;i++){
-            //その1秒の音量を送り、波を
+            //その1秒の音量を送り、波の情報をおくる
             if(wave_start[i] == 0.0){
                 wave_start[i] = now;
                 wave_inten[i] = wave_param;
@@ -81,7 +81,7 @@ function draw() {
     theShader.setUniform("mouse", [mouseX/width,map(mouseY, 0, height, 1, 0)]);
     theShader.setUniform("pixel_density", [pixelDensity()]);
     rect(0, 0, width, height);
-    console.log(vol, frog_param, wave_param, frog);
+    console.log("vol:float ",vol,"frog_param:int ", frog_param, "wave_param:float",wave_param, "frog:0|1",frog,"frame:int", frameCount);
 }
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
