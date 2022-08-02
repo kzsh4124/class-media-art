@@ -1,5 +1,5 @@
 let theShader;
-let path_dir = "../static/";
+let path_dir = "../static";
 let backbuffer;
 let canvas;
 let frog_param = 0;
@@ -31,8 +31,8 @@ function draw() {
     shader(theShader);
     //音量を取得
     let vol = mic.getLevel();
+    wave_param += vol;
     if(vol > threshold){
-        wave_param += vol;
         anti_frog += 1;
     }else{
         frog_param += 1;
@@ -49,19 +49,24 @@ function draw() {
                 wave_start[i] = now;
                 wave_inten[i] = wave_param;
                 wave_param = 0.0;
+              break;
             }
+        }
             //描画から3秒以上経過した波は消す
-            else if(now - wave_start[i] >= 3.0){
+        for(let i=0; i<4; i++){
+            if(now - wave_start[i] >= 3.0){
                 wave_start[i] = 0.0;
                 wave_inten[i] = 0.0;
             }
         }
+      console.log("wave!", wave_start, wave_inten);
     }
     //カエル飛び込みのスタート
     if(frog_param > 120 && frog_time == 0.0){
         frog = 1;
         frog_time = now;
         frog_param = 0;
+      console.log("frog!", frog_time, frog);
     }
     if(now-frog_time >= 4.0) {
         frog = 0;
@@ -76,7 +81,7 @@ function draw() {
     theShader.setUniform("mouse", [mouseX/width,map(mouseY, 0, height, 1, 0)]);
     theShader.setUniform("pixel_density", [pixelDensity()]);
     rect(0, 0, width, height);
-    
+    console.log(vol, frog_param, wave_param, frog);
 }
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
