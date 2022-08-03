@@ -12,10 +12,14 @@ let threshold;
 let wave_coord=[0,0];
 let wave_start=[0.0,0.0,0.0,0.0];
 let wave_inten=[0.0,0.0,0.0,0.0];
+let rand = 60;
 function preload(){
     theShader = loadShader(path_dir+"shader.vert", path_dir+"shader.frag");
 }
 function setup() {
+    // mimics the autoplay policy
+    getAudioContext().suspend();
+
     pixelDensity(1);
     canvas = createCanvas(windowWidth, windowHeight, WEBGL);
     backbuffer = createGraphics(width, height, WEBGL);
@@ -23,7 +27,7 @@ function setup() {
     noStroke();
     mic = new p5.AudioIn();
     mic.start();
-    threshold = 0.;
+    threshold = 0.1;
 
 }
 function draw() {
@@ -34,6 +38,7 @@ function draw() {
     wave_param += vol;
     if(vol > threshold){
         anti_frog += 1;
+        frog_param -= 2;
     }else{
         frog_param += 1;
     }
@@ -42,7 +47,9 @@ function draw() {
         anti_frog = 0;
     }
     //定例的な波を生成
-    if ((frameCount+1) % 60 == 0){
+    if ((frameCount+1) % rand == 0){
+        rand = randint(60, 180);
+        console.log("rand = ", rand);
         for(let i=0;i<4;i++){
             //その1秒の音量を送り、波の情報をおくる
             if(wave_start[i] == 0.0){
@@ -62,7 +69,7 @@ function draw() {
       console.log("wave!", wave_start, wave_inten);
     }
     //カエル飛び込みのスタート
-    if(frog_param > 120 && frog_time == 0.0){
+    if(frog_param > 600 && frog_time == 0.0){
         frog = 1;
         frog_time = now;
         frog_param = 0;
@@ -85,6 +92,9 @@ function draw() {
 }
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight);
+}
+function mousePressed() {
+    userStartAudio();
 }
 function randint(a,b){
     return Math.floor(Math.random()*(b-a+1))+a;
