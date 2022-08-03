@@ -13,13 +13,15 @@ let wave_coord=[0,0];
 let wave_start=[0.0,0.0,0.0,0.0];
 let wave_inten=[0.0,0.0,0.0,0.0];
 let rand = 60;
+let sound;
 function preload(){
     theShader = loadShader(path_dir+"shader.vert", path_dir+"shader.frag");
+    sound = loadSound(path_dir+"nc215110.mp3");
 }
 function setup() {
     // mimics the autoplay policy
     getAudioContext().suspend();
-
+    sound.playMode('restart');
     pixelDensity(1);
     canvas = createCanvas(windowWidth, windowHeight, WEBGL);
     backbuffer = createGraphics(width, height, WEBGL);
@@ -73,6 +75,7 @@ function draw() {
         frog = 1;
         frog_time = now;
         frog_param = 0;
+        sound.play();
       console.log("frog!", frog_time, frog);
     }
     if(now-frog_time >= 4.0) {
