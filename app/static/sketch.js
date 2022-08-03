@@ -42,7 +42,7 @@ function draw() {
     }else{
         frog_param += 1;
     }
-    if (anti_frog > 60){
+    if (anti_frog > 30){
         frog_param = 0;
         anti_frog = 0;
     }
@@ -54,14 +54,14 @@ function draw() {
             //その1秒の音量を送り、波の情報をおくる
             if(wave_start[i] == 0.0){
                 wave_start[i] = now;
-                wave_inten[i] = wave_param;
+                wave_inten[i] = wave_param/10.;
                 wave_param = 0.0;
-              break;
+                break;
             }
         }
             //描画から3秒以上経過した波は消す
         for(let i=0; i<4; i++){
-            if(now - wave_start[i] >= 3.0){
+            if(now - wave_start[i] >= 4.0){
                 wave_start[i] = 0.0;
                 wave_inten[i] = 0.0;
             }

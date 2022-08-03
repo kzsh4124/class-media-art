@@ -53,11 +53,11 @@ void main(){
     //波を生成
     for(int i = 0; i<4; i++){
         if (wave_start[i] != 0.){
-            vec2 center = vec2(rand(wave_start[i]), rand(wave_start[i]+1.))*2. - 1.;
+            vec2 center = vec2(rand(wave_start[i])*2.8-0.7, rand(wave_start[i]+1.)*2.-1.);
             //center = vec2(0.);
             float time_delta = u_time - wave_start[i];
             //color += wave(uv, center, vec3(0.4,0.4,0.7), time_delta);
-            color += ring(uv, center, 0.5*time_delta, 0.05/(1.+time_delta*time_delta*2.), vec3(min(1., 1.*wave_inten[i]), noise(rand(wave_inten[i])), noise(2.+rand(wave_inten[i]))));
+            color += ring(uv, center, 0.5*time_delta, 0.05/(1.+time_delta*time_delta*2.), vec3(min(1., 1.*wave_inten[i]), noise(rand(wave_start[i])+rand(wave_inten[i])), noise(2.+rand(wave_start[i])+rand(wave_inten[i]))));
         }
     }
     gl_FragColor = vec4(color, 1.);
